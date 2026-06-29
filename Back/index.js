@@ -53,30 +53,26 @@ app.post("/registro", async (req, res) => {
 
 });
 
-app.post("/login", async (req, res) => {
+app.post('/login', async function(req, res){
 
-    const { usuario, contrasena } = req.body;
-
-    const respuesta = await realizarQuery(`
-        SELECT * FROM Usuarios
-        WHERE usuario = '${usuario}'
-        AND contrasena = '${contrasena}'
+    const usuario = await realizarQuery(`
+        SELECT *
+        FROM Usuarios
+        WHERE usuario='${req.body.usuario}'
+        AND contrasena='${req.body.contrasena}'
     `);
 
-    if (respuesta.length == 0) {
-
+    if(usuario.length == 0){
         return res.send({
-            success: false,
-            mensaje: "Datos incorrectos"
+            login:false,
+            mensaje:"Usuario o contraseña incorrectos"
         });
-
     }
 
     res.send({
-        success: true,
-        mensaje: "Login exitoso",
-        usuario: respuesta[0]
+        login:true,
+        admin: usuario[0].es_admin,
+        usuario: usuario[0].usuario
     });
-
 });
 
