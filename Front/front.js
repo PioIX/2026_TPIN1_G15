@@ -22,24 +22,34 @@ async function registrarse() {
 
 async function login() {
 
-    const datos = {
-        usuario: document.getElementById("usuarioLogin").value,
-        contrasena: document.getElementById("passwordLogin").value
-    };
-
     const respuesta = await fetch("http://localhost:4000/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(datos)
+        body: JSON.stringify({
+            usuario: document.getElementById("usuarioLogin").value,
+            contrasena: document.getElementById("passwordLogin").value
+        })
     });
 
-    const data = await respuesta.json();
+    const datos = await respuesta.json();
+    console.log(datos);
 
-    alert(data.mensaje);
+    if (datos.login) {
 
-    if (data.success) {
-        console.log(data.usuario);
+        if (datos.admin) {
+            window.location.href = "admin.html";
+        }
+        else {
+            window.location.href = "juego.html";
+        }
+
+    } else {
+        alert(datos.mensaje);
     }
+}
+
+function cerrarSesion() {
+    window.location.href = "login.html";
 }
