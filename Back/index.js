@@ -76,3 +76,27 @@ app.post('/login', async function(req, res){
     });
 });
 
+//Obtener clubes
+app.get("/clubes", async (req,res)=>{
+
+    const respuesta = await realizarQuery(`
+        SELECT * FROM Clubes
+        ORDER BY nombre
+    `);
+
+    res.send(respuesta);
+
+});
+
+//Obtener jugadores
+app.get("/jugadores", async (req,res)=>{
+
+    const respuesta = await realizarQuery(`
+        SELECT *
+        FROM Futbolistas
+        ORDER BY apellido,nombre
+    `);
+
+    res.send(respuesta);
+
+});

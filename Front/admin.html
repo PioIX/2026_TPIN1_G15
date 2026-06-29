@@ -21,17 +21,33 @@
 
         <button onclick="eliminarJugador()">Eliminar jugador</button>
 
-        <button onclick="agregarUsuario()">Agregar usuario</button>
-
         <button onclick="editarUsuario()">Editar usuario</button>
 
         <button onclick="eliminarUsuario()">Eliminar usuario</button>
+        <br><br>
+
+        <button onclick="llevarAlJuego()">Jugar</button>
+
 
         <br><br>
 
         <button onclick="cerrarSesion()">
             Cerrar sesión
         </button>
+
+
+    </div>
+    <div id="modal" class="modal">
+
+        <div class="modal-contenido">
+
+            <span class="cerrar" onclick="cerrarModal()">&times;</span>
+
+            <h2 id="tituloModal"></h2>
+
+            <div id="contenidoModal"></div>
+
+        </div>
 
     </div>
 
