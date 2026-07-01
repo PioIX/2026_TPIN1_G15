@@ -21,15 +21,19 @@ app.get('/', function (req, res) {
         message: 'GET Home route working fine!'
     });
 });
+//===========================
+// REGISTRO
+//===========================
 
 app.post("/registro", async (req, res) => {
 
     const { nombre_completo, usuario, email, contrasena } = req.body;
 
     const existe = await realizarQuery(`
-        SELECT * FROM Usuarios
-        WHERE usuario = '${usuario}'
-        OR email = '${email}'
+        SELECT *
+        FROM Usuarios
+        WHERE usuario='${usuario}'
+        OR email='${email}'
     `);
 
     if (existe.length > 0) {
@@ -41,9 +45,14 @@ app.post("/registro", async (req, res) => {
 
     await realizarQuery(`
         INSERT INTO Usuarios
-        (nombre_completo, usuario, email, contrasena)
-        VALUES
-        ('${nombre_completo}', '${usuario}', '${email}', '${contrasena}')
+        (nombre_completo,usuario,email,contrasena)
+
+        VALUES(
+        '${nombre_completo}',
+        '${usuario}',
+        '${email}',
+        '${contrasena}'
+        )
     `);
 
     res.send({
@@ -53,7 +62,12 @@ app.post("/registro", async (req, res) => {
 
 });
 
-app.post('/login', async function(req, res){
+
+//===========================
+// LOGIN
+//===========================
+
+app.post("/login", async (req, res) => {
 
     const usuario = await realizarQuery(`
         SELECT *
@@ -61,22 +75,25 @@ app.post('/login', async function(req, res){
         WHERE usuario='${req.body.usuario}'
         AND contrasena='${req.body.contrasena}'
     `);
+    if (usuario.length == 0) {
 
-    if(usuario.length == 0){
         return res.send({
-            login:false,
-            mensaje:"Usuario o contraseña incorrectos"
+            login: false,
+            mensaje: "Usuario o contraseña incorrectos"
         });
-    }
 
+    }
     res.send({
-        login:true,
+
+        login: true,
         admin: usuario[0].es_admin,
         usuario: usuario[0].usuario
+
     });
+
 });
 
-//Obtener clubes
+//OBTENER CLUBES
 app.get("/clubes", async (req,res)=>{
 
     const respuesta = await realizarQuery(`
@@ -88,7 +105,7 @@ app.get("/clubes", async (req,res)=>{
 
 });
 
-//Obtener jugadores
+//OBTENER JUGADORES
 app.get("/jugadores", async (req,res)=>{
 
     const respuesta = await realizarQuery(`
@@ -98,5 +115,154 @@ app.get("/jugadores", async (req,res)=>{
     `);
 
     res.send(respuesta);
+
+});
+
+app.post("/jugadores", async (req, res) => {
+
+    const existe = await realizarQuery(`
+        SELECT *
+        FROM Futbolistas
+        WHERE nombre='${req.body.nombre}'
+        AND apellido='${req.body.apellido}'
+        AND id_club=${req.body.id_club}
+    `);
+
+    if (existe.length > 0) {
+        return res.send({
+            success: false,
+            mensaje: "El futbolista ya existe"
+        });
+    }
+
+    await realizarQuery(`
+        INSERT INTO Futbolistas
+        (nombre, apellido, nacionalidad, posicion, dorsal, edad, id_club)
+        VALUES
+        (
+            '${req.body.nombre}',
+            '${req.body.apellido}',
+            '${req.body.nacionalidad}',
+            '${req.body.posicion}',
+            ${req.body.dorsal},
+            ${req.body.edad},
+            ${req.body.id_club}
+        )
+    `);
+
+    res.send({
+        success: true,
+        mensaje: "Futbolista agregado"
+    });
+
+});
+
+app.put("/jugadores/:id", async (req, res) => {
+
+    const existe = await realizarQuery(`
+        SELECT *
+        FROM Futbolistas
+        WHERE id_futbolista=${req.params.id}
+    `);
+
+    if (existe.length == 0) {
+        return res.send({
+            success: false,
+            mensaje: "El futbolista no existe"
+        });
+    }
+
+    await realizarQuery(`
+        UPDATE Futbolistas
+        SET dorsal=${req.body.dorsal}
+        WHERE id_futbolista=${req.params.id}
+    `);
+
+    res.send({
+        success: true,
+        mensaje: "Futbolista actualizado"
+    });
+
+});
+
+app.delete("/jugadores/:id", async (req, res) => {
+
+    const existe = await realizarQuery(`
+        SELECT *
+        FROM Futbolistas
+        WHERE id_futbolista=${req.params.id}
+    `);
+
+    if (existe.length == 0) {
+        return res.send({
+            success: false,
+            mensaje: "El futbolista no existe"
+        });
+    }
+
+    await realizarQuery(`
+        DELETE FROM Futbolistas
+        WHERE id_futbolista=${req.params.id}
+    `);
+
+    res.send({
+        success: true,
+        mensaje: "Futbolista eliminado"
+    });
+
+});
+
+app.put("/usuarios/:id", async (req, res) => {
+
+    const existe = await realizarQuery(`
+        SELECT *
+        FROM Usuarios
+        WHERE id_usuario=${req.params.id}
+    `);
+
+    if (existe.length == 0) {
+        return res.send({
+            success: false,
+            mensaje: "El usuario no existe"
+        });
+    }
+
+    await realizarQuery(`
+        UPDATE Usuarios
+        SET es_admin=${req.body.es_admin}
+        WHERE id_usuario=${req.params.id}
+    `);
+
+    res.send({
+        success: true,
+        mensaje: "Usuario actualizado"
+    });
+
+});
+
+app.delete("/usuarios/:id", async (req, res) => {
+
+    const existe = await realizarQuery(`
+        SELECT *
+        FROM Usuarios
+        WHERE id_usuario=${req.params.id}
+    `);
+
+    if (existe.length == 0) {
+        return res.send({
+            success: false,
+            mensaje: "El usuario no existe"
+        });
+    }
+
+    await realizarQuery(`
+        DELETE FROM Usuarios
+        WHERE id_usuario=${req.params.id}
+    `);
+
+    res.send({
+        success: true,
+        mensaje: "Usuario eliminado"
+    });
 
 });

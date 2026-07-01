@@ -14,9 +14,7 @@ async function obtenerClubes(){
 
 }
 async function agregarJugador() {
-    const respuesta = await fetch("http://localhost:4000/clubes");
-
-    const clubes = await respuesta.json();
+    const clubes = await obtenerClubes();
     let opcionesClubes = "";
 
     clubes.forEach(club => {
@@ -65,10 +63,40 @@ async function agregarJugador() {
     );
 }
 
-async function editarJugador() {
-    const respuesta = await fetch("http://localhost:4000/jugadores");
+async function guardarJugador(){
 
-    const jugadores = await respuesta.json();
+    const respuesta = await fetch("http://localhost:4000/jugadores",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            nombre:document.getElementById("nombreJugador").value,
+            apellido:document.getElementById("apellidoJugador").value,
+            nacionalidad:document.getElementById("nacionalidadJugador").value,
+            edad:document.getElementById("edadJugador").value,
+            posicion:document.getElementById("posicionJugador").value,
+            dorsal:document.getElementById("dorsalJugador").value,
+            id_club:document.getElementById("clubJugador").value
+
+        })
+
+    });
+
+    const datos=await respuesta.json();
+
+    alert(datos.mensaje);
+
+    cerrarModal();
+
+}
+
+async function editarJugador() {
+    const jugadores = await obtenerJugadores();
 
     let opciones = "";
 
@@ -92,38 +120,94 @@ async function editarJugador() {
         </select><br><br>
 
         Nuevo dorsal<br>
-        <input type="number"><br><br>
+        <input type="number" id="nuevoDorsal"><br><br>
 
-        <button>Actualizar</button>
+        <button onclick=actualizarJugador()>Actualizar</button>
         `
     );
+}
+
+async function actualizarJugador(){
+
+    const id=document.getElementById("jugadorEditar").value;
+
+    const dorsal=document.getElementById("nuevoDorsal").value;
+
+    const respuesta=await fetch("http://localhost:4000/jugadores/"+id,{
+
+        method:"PUT",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            dorsal:dorsal
+
+        })
+
+    });
+
+    const datos=await respuesta.json();
+
+    alert(datos.mensaje);
+
+    cerrarModal();
 
 }
 
-function eliminarJugador() {
+async function eliminarJugador(){
+
+    const jugadores=await obtenerJugadores();
+
+    let opciones="";
+
+    jugadores.forEach(jugador=>{
+
+        opciones+=`
+        <option value="${jugador.id_futbolista}">
+            ${jugador.nombre} ${jugador.apellido}
+        </option>
+        `;
+
+    });
 
     abrirModal(
+
         "Eliminar jugador",
 
         `
-        Jugador<br>
-
+        Jugador
+        <br>
         <select id="jugadorEliminar">
 
-            <option value="1">Erling Haaland</option>
-            <option value="2">Phil Foden</option>
-            <option value="3">Florian Wirtz</option>
-            <option value="4">Virgil van Dijk</option>
-            <option value="5">Mohamed Salah</option>
+        ${opciones}
 
-        </select><br><br>
-
-        <button>Eliminar</button>
-        `
+        </select>
+        <br><br>
+        <button onclick="borrarJugador()">Eliminar</button>`
     );
 
 }
 
+async function borrarJugador(){
+
+    const id=document.getElementById("jugadorEliminar").value;
+
+    const respuesta=await fetch("http://localhost:4000/jugadores/"+id,{
+
+        method:"DELETE"
+
+    });
+
+    const datos=await respuesta.json();
+
+    alert(datos.mensaje);
+
+    cerrarModal();
+
+}
 
 function editarUsuario() {
     abrirModal(
@@ -144,28 +228,68 @@ function editarUsuario() {
     );
 }
 
-function actualizarUsuario() {
+async function actualizarUsuario(){
 
-    const id = document.getElementById("idUsuario").value;
-    const es_admin = document.getElementById("esAdmin").value;
+    const id=document.getElementById("idUsuario").value;
+    const es_admin=document.getElementById("esAdmin").value;
+    const respuesta=await fetch("http://localhost:4000/usuarios/"+id,{
 
-    console.log(id, es_admin);
+        method:"PUT",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            es_admin:es_admin
+        })
+
+    });
+
+    const datos=await respuesta.json();
+
+    alert(datos.mensaje);
+
+    cerrarModal();
 
 }
 
-function eliminarUsuario() {
+function eliminarUsuario(){
+
     abrirModal(
+
         "Eliminar usuario",
 
-        `
-        ID del jugador<br>
+        `ID del usuario
 
-        <input type="number"><br><br>
+        <br>
 
-        <button>Eliminar</button>
-        `
+        <input type="number" id="idEliminarUsuario">
+
+        <br><br>
+        <button onclick="borrarUsuario()">Eliminar</button>`
     );
+
 }
+
+async function borrarUsuario(){
+
+    const id=document.getElementById("idEliminarUsuario").value;
+
+    const respuesta=await fetch("http://localhost:4000/usuarios/"+id,{
+
+        method:"DELETE"
+
+    });
+
+    const datos=await respuesta.json();
+
+    alert(datos.mensaje);
+
+    cerrarModal();
+
+}
+
 
 function llevarAlJuego() {
     window.location.href = "juego.html";
