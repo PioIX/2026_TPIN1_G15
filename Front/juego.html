@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Who Are Ya? - Juego</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/juego.css">
 </head>
 
 <body>
@@ -17,7 +17,12 @@
 
         <p>Has iniciado sesión correctamente.</p>
 
-        <button onclick="cerrarSesion()">
+        <div class="acciones">
+            <a href="partida.html" class="btn btn-jugar">Jugar</a>
+            <a href="rankings.html" class="btn btn-rankings">Rankings</a>
+        </div>
+
+        <button onclick="cerrarSesion()" class="btn-logout">
             Cerrar sesión
         </button>
 
