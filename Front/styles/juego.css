@@ -46,6 +46,26 @@ p {
     color: #cbd5e1;
 }
 
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 10px;
+    background-color: #334155;
+    color: #f8fafc;
+    font-size: 15px;
+}
+
+select:focus {
+    outline: 2px solid #38bdf8;
+}
+
+select option {
+    background-color: #334155;
+    color: #f8fafc;
+}
+
 .acciones {
     display: flex;
     flex-direction: column;
