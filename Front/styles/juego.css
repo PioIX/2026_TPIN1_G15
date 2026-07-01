@@ -1,0 +1,98 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.contenedor {
+    width: 90%;
+    max-width: 500px;
+    background-color: #1e293b;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 3rem;
+    color: #38bdf8;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #f8fafc;
+}
+
+p {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #cbd5e1;
+}
+
+.acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btn,
+.btn-logout {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn {
+    background-color: #38bdf8;
+    color: #0f172a;
+}
+
+.btn:hover {
+    background-color: #0ea5e9;
+    transform: translateY(-2px);
+}
+
+.btn-rankings {
+    background-color: #334155;
+    color: #f8fafc;
+}
+
+.btn-rankings:hover {
+    background-color: #475569;
+}
+
+.btn-logout {
+    margin-top: 16px;
+    background-color: #38bdf8;
+    color: #0f172a;
+}
+
+.btn-logout:hover {
+    background-color: #0ea5e9;
+    transform: translateY(-2px);
+}
