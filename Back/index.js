@@ -273,3 +273,120 @@ app.delete("/usuarios/:id", async (req, res) => {
     res.send("Usuario eliminado");
 
 });
+
+app.post("/partida", async (req, res) => {
+
+    const jugadores = await realizarQuery(`
+        SELECT id_futbolista
+        FROM Futbolistas
+    `);
+
+    const aleatorio = jugadores[Math.floor(Math.random() * jugadores.length)];
+
+    await realizarQuery(`
+        INSERT INTO Partidas
+        (id_usuario, id_futbolista_objetivo)
+        VALUES
+        (${req.body.id_usuario}, ${aleatorio.id_futbolista})
+    `);
+
+    const partida = await realizarQuery(`
+        SELECT MAX(id_partida) AS id_partida
+        FROM Partidas
+    `);
+
+    res.send({
+        id_partida: partida[0].id_partida
+    });
+
+});
+
+app.post("/intento", async (req, res) => {
+
+    const { id_partida, id_futbolista } = req.body;
+
+    const partida = await realizarQuery(`
+        SELECT *
+        FROM Partidas
+        WHERE id_partida=${id_partida}
+    `);
+
+    const objetivo = await realizarQuery(`
+        SELECT
+            f.*,
+            c.nombre AS club,
+            c.id_liga,
+            l.nombre AS liga
+        FROM Futbolistas f
+        INNER JOIN Clubes c
+            ON f.id_club = c.id_club
+        INNER JOIN Ligas l
+            ON c.id_liga = l.id_liga
+        WHERE f.id_futbolista=${partida[0].id_futbolista_objetivo}
+    `);
+
+    const elegido = await realizarQuery(`
+        SELECT
+            f.*,
+            c.nombre AS club,
+            c.id_liga,
+            l.nombre AS liga
+        FROM Futbolistas f
+        INNER JOIN Clubes c
+            ON f.id_club = c.id_club
+        INNER JOIN Ligas l
+            ON c.id_liga = l.id_liga
+        WHERE f.id_futbolista=${id_futbolista}
+    `);
+
+    const cantidad = await realizarQuery(`
+        SELECT COUNT(*) cantidad
+        FROM Intentos
+        WHERE id_partida=${id_partida}
+    `);
+
+    await realizarQuery(`
+        INSERT INTO Intentos
+        (numero_intento,id_partida,id_futbolista)
+        VALUES
+        (
+            ${cantidad[0].cantidad + 1},
+            ${id_partida},
+            ${id_futbolista}
+        )
+    `);
+
+    const j = elegido[0];
+    const o = objetivo[0];
+
+    res.send({
+
+        ganado: j.id_futbolista == o.id_futbolista,
+
+        nacionalidad: j.nacionalidad == o.nacionalidad,
+
+        club: j.id_club == o.id_club,
+
+        liga: j.id_liga == o.id_liga,
+
+        posicion: j.posicion == o.posicion,
+
+        dorsal: {
+
+            correcto: j.dorsal == o.dorsal,
+
+            mayor: j.dorsal < o.dorsal
+
+        },
+
+        edad: {
+
+            correcto: j.edad == o.edad,
+
+            mayor: j.edad < o.edad
+
+        }
+
+    });
+
+});
