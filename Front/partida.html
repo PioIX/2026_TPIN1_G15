@@ -4,50 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Who Are Ya? - Partida</title>
+
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/juego.css">
 </head>
 
 <body>
+
     <div class="contenedor">
+
         <h1>Who Are Ya?</h1>
+
         <h2>Partida</h2>
-        <input type="text" id="nombreJugador" name="nombreJugador" placeholder="Ingrese nombre del jugador">
 
-        <select id="listaJugadores" class="selector-jugadores" size="5" style="display:none;"></select>
-        <div class="circulos-row">
-            <div class="circulos" id="nacionalidad">
-                <div class="circulo">
-                    <img src="public/test.webp" class="img_circulo">
-                </div>
-                <p class="texto_circulo">NAC</p>
-            </div>
-            <div class="circulos" id="posicion">
-                <div class="circulo">
-                    <p class="posiciones"></p>
-                </div>
-                <p class="texto_circulo">POS</p>
-            </div>
-            <div class="circulos" id="dorsal">
-                <div class="circulo">
-                    <p class="dorsales"></p>
-                </div>
-                <p class="texto_circulo">
-                    NUM
-                </p>
-            </div>
-            <div class="circulos" id="edad">
-                <div class="circulo">
-                    <p class="edades"></p>
-                </div>
-                <p class="texto_circulo">
-                    EDAD
-                </p>
-            </div>
-        </div>
-        <a href="juego.html" class="btn">Volver al juego</a>
+        <input
+            type="text"
+            id="nombreJugador"
+            placeholder="Ingrese nombre del jugador">
+
+        <select
+            id="listaJugadores"
+            class="selector-jugadores"
+            size="5"
+            style="display:none;">
+        </select>
+
+        <!-- Acá se agregan automáticamente los intentos -->
+        <div id="historialIntentos"></div>
+
+        <br>
+
+        <a href="juego.html" class="btn">
+            Volver al juego
+        </a>
+
     </div>
-    <script src="partida.js"></script>
-</body>
 
+    <script src="partida.js"></script>
+
+</body>
 </html>
