@@ -118,6 +118,19 @@ app.get("/jugadores", async (req,res)=>{
 
 });
 
+// Obtener usuarios
+app.get("/usuarios", async (req, res) => {
+
+    const respuesta = await realizarQuery(`
+        SELECT *
+        FROM Usuarios
+        ORDER BY nombre_completo
+    `);
+
+    res.send(respuesta);
+
+});
+
 app.post("/jugadores", async (req, res) => {
 
     const existe = await realizarQuery(`
@@ -248,11 +261,8 @@ app.delete("/usuarios/:id", async (req, res) => {
         WHERE id_usuario=${req.params.id}
     `);
 
-    if (existe.length == 0) {
-        return res.send({
-            success: false,
-            mensaje: "El usuario no existe"
-        });
+    if(existe.length==0){
+        return res.send("El usuario no existe");
     }
 
     await realizarQuery(`
@@ -260,9 +270,6 @@ app.delete("/usuarios/:id", async (req, res) => {
         WHERE id_usuario=${req.params.id}
     `);
 
-    res.send({
-        success: true,
-        mensaje: "Usuario eliminado"
-    });
+    res.send("Usuario eliminado");
 
 });

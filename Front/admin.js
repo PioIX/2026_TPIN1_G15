@@ -13,6 +13,14 @@ async function obtenerClubes(){
     return await respuesta.json();
 
 }
+
+async function obtenerUsuarios() {
+
+    const respuesta = await fetch("http://localhost:4000/usuarios");
+
+    return await respuesta.json();
+
+}
 async function agregarJugador() {
     const clubes = await obtenerClubes();
     let opcionesClubes = "";
@@ -209,85 +217,121 @@ async function borrarJugador(){
 
 }
 
-function editarUsuario() {
+async function editarUsuario() {
+
+    const usuarios = await obtenerUsuarios();
+
+    let opciones = "";
+
+    usuarios.forEach(usuario => {
+
+        opciones += `
+            <option value="${usuario.id_usuario}">
+                ${usuario.nombre_completo} - ${usuario.email}
+            </option>
+        `;
+
+    });
+
     abrirModal(
         "Editar usuario",
 
         `
-        ID del usuario<br>
-        <input type="number" id="idUsuario"><br><br>
+        Usuario<br>
+
+        <select id="idUsuario">
+            ${opciones}
+        </select><br><br>
 
         ¿Administrador?<br>
+
         <select id="esAdmin">
             <option value="0">No</option>
             <option value="1">Sí</option>
         </select><br><br>
 
-        <button onclick="actualizarUsuario()">Actualizar</button>
+        <button onclick="actualizarUsuario()">
+            Actualizar
+        </button>
         `
     );
+
 }
 
-async function actualizarUsuario(){
+async function actualizarUsuario() {
 
-    const id=document.getElementById("idUsuario").value;
-    const es_admin=document.getElementById("esAdmin").value;
-    const respuesta=await fetch("http://localhost:4000/usuarios/"+id,{
+    const id = document.getElementById("idUsuario").value;
+    const es_admin = document.getElementById("esAdmin").value;
 
-        method:"PUT",
+    const respuesta = await fetch(`http://localhost:4000/usuarios/${id}`, {
 
-        headers:{
-            "Content-Type":"application/json"
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
         },
 
-        body:JSON.stringify({
-            es_admin:es_admin
+        body: JSON.stringify({
+            es_admin
         })
 
     });
 
-    const datos=await respuesta.json();
+    const mensaje = await respuesta.text();
 
-    alert(datos.mensaje);
+    alert(mensaje);
 
     cerrarModal();
 
 }
 
-function eliminarUsuario(){
+async function eliminarUsuario() {
+
+    const usuarios = await obtenerUsuarios();
+
+    let opciones = "";
+
+    usuarios.forEach(usuario => {
+
+        opciones += `
+            <option value="${usuario.id_usuario}">
+                ${usuario.nombre_completo} - ${usuario.email}
+            </option>
+        `;
+
+    });
 
     abrirModal(
-
         "Eliminar usuario",
 
-        `ID del usuario
+        `
+        Usuario<br>
 
-        <br>
+        <select id="idUsuarioEliminar">
+            ${opciones}
+        </select><br><br>
 
-        <input type="number" id="idEliminarUsuario">
-
-        <br><br>
-        <button onclick="borrarUsuario()">Eliminar</button>`
+        <button onclick="borrarUsuario()">
+            Eliminar
+        </button>
+        `
     );
 
 }
 
-async function borrarUsuario(){
+async function borrarUsuario() {
 
-    const id=document.getElementById("idEliminarUsuario").value;
+    const id = document.getElementById("idUsuarioEliminar").value;
 
-    const respuesta=await fetch("http://localhost:4000/usuarios/"+id,{
-
+    const respuesta = await fetch(`http://localhost:4000/usuarios/${id}`,{
         method:"DELETE"
-
     });
 
-    const datos=await respuesta.json();
+    const mensaje = await respuesta.text();
 
-    alert(datos.mensaje);
+    alert(mensaje);
 
     cerrarModal();
-
 }
 
 
