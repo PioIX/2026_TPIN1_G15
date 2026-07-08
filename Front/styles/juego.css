@@ -16,8 +16,8 @@ body {
 }
 
 .contenedor {
-    width: 90%;
-    max-width: 500px;
+    width:95%;
+    max-width:760px;
     background-color: #1e293b;
     padding: 40px;
     border-radius: 18px;
@@ -79,19 +79,32 @@ p {
 }
 
 .circulo{
-    width:70px;
-    height:70px;
-
+    width:75px;
+    height:75px;
     border-radius:50%;
-
     display:flex;
     justify-content:center;
     align-items:center;
-
     text-align:center;
-    color:white;
     font-weight:bold;
-    padding:5px;
+    padding:8px;
+    font-size:12px;
+    word-break:break-word;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.verde .circulo{
+    background:#16a34a;
+}
+
+.rojo .circulo{
+    background:#dc2626;
+}
+
+.circulos p{
+    margin-top:8px;
+    font-weight:bold;
 }
 
 .img_circulo {
@@ -173,13 +186,14 @@ select option {
 }
 
 #historialIntentos{
-
-    margin-top:25px;
-
     display:flex;
-
     flex-direction:column;
+    gap:15px;
+}
 
-    gap:18px;
-
+.fila-intento{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:nowrap;
 }

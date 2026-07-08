@@ -109,9 +109,20 @@ app.get("/clubes", async (req,res)=>{
 app.get("/jugadores", async (req,res)=>{
 
     const respuesta = await realizarQuery(`
-        SELECT *
-        FROM Futbolistas
-        ORDER BY apellido,nombre
+        SELECT
+            f.*,
+            c.nombre AS club,
+            l.nombre AS liga
+
+        FROM Futbolistas f
+
+        INNER JOIN Clubes c
+            ON f.id_club = c.id_club
+
+        INNER JOIN Ligas l
+            ON c.id_liga = l.id_liga
+
+        ORDER BY f.apellido,f.nombre
     `);
 
     res.send(respuesta);
