@@ -390,3 +390,16 @@ app.post("/intento", async (req, res) => {
     });
 
 });
+
+//OBTENER RANKING DE USUARIOS (de mayor a menor puntaje)
+app.get("/rankings", async (req, res) => {
+
+    const respuesta = await realizarQuery(`
+        SELECT usuario, nombre_completo, puntos
+        FROM Usuarios
+        ORDER BY puntos DESC, usuario ASC
+    `);
+
+    res.send(respuesta);
+
+});

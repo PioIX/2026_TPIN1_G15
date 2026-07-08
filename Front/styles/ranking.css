@@ -1,0 +1,48 @@
+.contenedor-rankings {
+    max-width: 600px;
+}
+
+.tabla-rankings {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.tabla-rankings th,
+.tabla-rankings td {
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.tabla-rankings thead {
+    background-color: #334155;
+    color: #38bdf8;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.tabla-rankings tbody tr {
+    background-color: #0f172a;
+    border-bottom: 1px solid #334155;
+}
+
+.tabla-rankings tbody tr:nth-child(even) {
+    background-color: #16213a;
+}
+
+.tabla-rankings tbody tr:hover {
+    background-color: #1e293b;
+}
+
+.tabla-rankings td {
+    color: #f8fafc;
+}
+
+.tabla-rankings td:first-child {
+    font-weight: bold;
+    text-align: center;
+    width: 60px;
+}

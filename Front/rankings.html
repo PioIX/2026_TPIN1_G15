@@ -4,13 +4,31 @@
     <meta charset="UTF-8">
     <title>Who Are Ya? - Rankings</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/rankings.css">
 </head>
 <body>
-    <div class="contenedor">
+    <div class="contenedor contenedor-rankings">
         <h1>Who Are Ya?</h1>
         <h2>Rankings</h2>
-        <p>Próximamente verás el ranking de jugadores.</p>
+
+        <table class="tabla-rankings">
+            <thead>
+                <tr>
+                    <th>Puesto</th>
+                    <th>Usuario</th>
+                    <th>Puntos</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoRanking">
+                <tr>
+                    <td colspan="3">Cargando ranking...</td>
+                </tr>
+            </tbody>
+        </table>
+
         <a href="juego.html" class="btn">Volver al juego</a>
     </div>
+
+    <script src="rankings.js"></script>
 </body>
 </html>
