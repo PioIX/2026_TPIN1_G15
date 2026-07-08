@@ -58,9 +58,9 @@ function filtrarJugadores(texto) {
     return jugadores.filter(jugador => {
 
         return jugador.nombre.toLowerCase().startsWith(texto) ||
-               jugador.apellido.toLowerCase().startsWith(texto);
+            jugador.apellido.toLowerCase().startsWith(texto);
 
-    }).slice(0,10);
+    }).slice(0, 10);
 
 }
 
@@ -69,7 +69,7 @@ function filtrarJugadores(texto) {
 //========================================
 
 async function comprobarJugador() {
-
+    console.log(jugadorSeleccionado);
     const respuesta = await fetch("http://localhost:4000/intento", {
 
         method: "POST",
@@ -100,70 +100,77 @@ async function comprobarJugador() {
 // ACTUALIZAR PANTALLA
 //========================================
 
-function actualizarPantalla(datos){
+function actualizarPantalla(datos) {
 
-    const historial=document.getElementById("historialIntentos");
+    const historial = document.getElementById("historialIntentos");
 
-    historial.innerHTML+=`
+    let flechaEdad = "";
+    let flechaDorsal = "";
 
-    <div class="circulos-row">
-
-        <div class="circulos">
-            <div class="circulo"
-            style="background:${datos.nacionalidad?"green":"red"}">
-                ${jugadorSeleccionado.nacionalidad}
-            </div>
-            <p>NAC</p>
-        </div>
-
-        <div class="circulos">
-            <div class="circulo"
-            style="background:${datos.club?"green":"red"}">
-                ${jugadorSeleccionado.club}
-            </div>
-            <p>CLUB</p>
-        </div>
-
-        <div class="circulos">
-            <div class="circulo"
-            style="background:${datos.liga?"green":"red"}">
-                ${jugadorSeleccionado.liga}
-            </div>
-            <p>LIGA</p>
-        </div>
-
-        <div class="circulos">
-            <div class="circulo"
-            style="background:${datos.posicion?"green":"red"}">
-                ${jugadorSeleccionado.posicion}
-            </div>
-            <p>POS</p>
-        </div>
-
-        <div class="circulos">
-            <div class="circulo"
-            style="background:${datos.dorsal.correcto?"green":"red"}">
-                ${jugadorSeleccionado.dorsal}
-            </div>
-            <p>NUM</p>
-        </div>
-
-        <div class="circulos">
-            <div class="circulo"
-            style="background:${datos.edad.correcto?"green":"red"}">
-                ${jugadorSeleccionado.edad}
-            </div>
-            <p>EDAD</p>
-        </div>
-
-    </div>
-
-    `;
-
-    if(datos.ganado){
-        alert("¡Ganaste!");
+    if (!datos.edad.correcto) {
+        flechaEdad = datos.edad.mayor ? "↑" : "↓";
     }
 
+    if (!datos.dorsal.correcto) {
+        flechaDorsal = datos.dorsal.mayor ? "↑" : "↓";
+    }
+
+    historial.insertAdjacentHTML("afterbegin", `
+
+        <div class="fila-intento">
+
+            <div class="circulos ${datos.nacionalidad ? 'verde' : 'rojo'}">
+                <div class="circulo">
+                    <img src="public/banderas/${jugadorSeleccionado.nacionalidad}.png"
+                class="img_circulo">                
+                </div>
+                <p>NAC</p>
+            </div>
+
+            <div class="circulos ${datos.posicion ? 'verde' : 'rojo'}">
+                <div class="circulo">
+                    ${jugadorSeleccionado.posicion}
+                </div>
+                <p>POS</p>
+            </div>
+
+            <div class="circulos ${datos.club ? 'verde' : 'rojo'}">
+                <div class="circulo">
+                    <img src="public/clubes/${jugadorSeleccionado.club}.png"
+                    class="img_circulo">                
+                </div>
+                <p>CLUB</p>
+            </div>
+
+            <div class="circulos ${datos.liga ? 'verde' : 'rojo'}">
+                <div class="circulo">
+                    <img src="public/ligas/${jugadorSeleccionado.liga}.png"
+                    class="img_circulo">                
+                </div>
+                <p>LIGA</p>
+            </div>
+
+            <div class="circulos ${datos.dorsal.correcto ? 'verde' : 'rojo'}">
+                <div class="circulo">
+                    ${jugadorSeleccionado.dorsal} ${flechaDorsal}
+                </div>
+                <p>DORSAL</p>
+            </div>
+
+            <div class="circulos ${datos.edad.correcto ? 'verde' : 'rojo'}">
+                <div class="circulo">
+                    ${jugadorSeleccionado.edad} ${flechaEdad}
+                </div>
+                <p>EDAD</p>
+            </div>
+
+        </div>
+
+    `);
+
+    if (datos.ganado) {
+        alert("¡Ganaste!");
+    }
 }
 //========================================
 // INICIALIZAR
