@@ -46,3 +46,39 @@
     text-align: center;
     width: 60px;
 }
+
+
+.usuario-actual{
+    background:#1d4ed8 !important;
+}
+
+.usuario-actual td{
+    color:white;
+    font-weight:bold;
+}
+
+#miPosicion{
+    margin:15px 0;
+    text-align:center;
+    font-size:18px;
+    color:#38bdf8;
+}
+
+.mi-posicion{
+    margin:25px 0;
+    padding:18px;
+    background:#0f172a;
+    border:2px solid #38bdf8;
+    border-radius:12px;
+    text-align:center;
+}
+
+.mi-posicion .dato{
+    font-size:20px;
+    margin:8px 0;
+    color:white;
+}
+
+.mi-posicion strong{
+    color:#38bdf8;
+}
