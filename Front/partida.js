@@ -1,9 +1,12 @@
 const inputJugador = document.getElementById("nombreJugador");
 const selectJugadores = document.getElementById("listaJugadores");
+const idUsuario = localStorage.getItem("id_usuario");
 
 let jugadores = [];
 let idPartida = null;
 let jugadorSeleccionado = null;
+
+let jugadoresObjetivo = [];
 
 //========================================
 // CARGAR JUGADORES
@@ -33,7 +36,8 @@ async function crearPartida() {
 
         body: JSON.stringify({
 
-            id_usuario: 1      // Después lo reemplazaremos por el usuario logueado
+            id_usuario: idUsuario, 
+            usados: jugadoresObjetivo
 
         })
 
@@ -169,7 +173,18 @@ function actualizarPantalla(datos) {
     `);
 
     if (datos.ganado) {
-        alert("¡Ganaste!");
+
+        alert("¡Ganaste!\n+" + datos.puntos_obtenidos + " puntos");;
+
+        jugadoresObjetivo.push(datos.id_objetivo);
+
+        inputJugador.disabled = true;
+        inputJugador.value = "";
+
+        selectJugadores.innerHTML = "";
+        selectJugadores.style.display = "none";
+
+        document.getElementById("btnSiguiente").style.display = "block";
     }
 }
 //========================================
@@ -229,3 +244,17 @@ async function inicializar() {
 }
 
 inicializar();
+
+async function siguienteJugador(){
+
+    document.getElementById("historialIntentos").innerHTML="";
+
+    inputJugador.disabled=false;
+
+    inputJugador.value="";
+
+    document.getElementById("btnSiguiente").style.display="none";
+
+    await crearPartida();
+
+}

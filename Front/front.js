@@ -38,6 +38,11 @@ async function login() {
 
     if (datos.login) {
 
+        localStorage.setItem("id_usuario", datos.id_usuario);
+        localStorage.setItem("usuario", datos.usuario);
+        localStorage.setItem("admin", datos.admin);
+
+        
         if (datos.admin) {
             window.location.href = "admin.html";
         }
@@ -51,5 +56,6 @@ async function login() {
 }
 
 function cerrarSesion() {
+    localStorage.clear();
     window.location.href = "login.html";
 }

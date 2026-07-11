@@ -17,16 +17,9 @@
 
         <h2>Partida</h2>
 
-        <input
-            type="text"
-            id="nombreJugador"
-            placeholder="Ingrese nombre del jugador">
+        <input type="text" id="nombreJugador" placeholder="Ingrese nombre del jugador">
 
-        <select
-            id="listaJugadores"
-            class="selector-jugadores"
-            size="5"
-            style="display:none;">
+        <select id="listaJugadores" class="selector-jugadores" size="5" style="display:none;">
         </select>
 
         <!-- Acá se agregan automáticamente los intentos -->
@@ -34,8 +27,13 @@
 
         <br>
 
+        <button id="btnSiguiente" onclick="siguienteJugador()" style="display:none">
+            Siguiente jugador
+        </button>
+
+        <br>
         <a href="juego.html" class="btn">
-            Volver al juego
+            Volver al menu
         </a>
 
     </div>
@@ -43,4 +41,5 @@
     <script src="partida.js"></script>
 
 </body>
+
 </html>

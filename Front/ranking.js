@@ -1,3 +1,5 @@
+const usuarioLogueado = localStorage.getItem("usuario");
+
 async function obtenerRanking() {
 
     const respuesta = await fetch("http://localhost:4000/rankings");
@@ -24,28 +26,32 @@ async function mostrarRanking() {
         const usuarios = await obtenerRanking();
 
         if (!usuarios || usuarios.length === 0) {
+
             cuerpo.innerHTML = `
                 <tr>
                     <td colspan="3">Todavía no hay usuarios con puntos.</td>
                 </tr>
             `;
-            return;
-        }
 
-        // El backend ya devuelve los usuarios ordenados de mayor a menor puntaje,
-        // pero se ordena también acá por las dudas.
-        usuarios.sort((a, b) => b.puntos - a.puntos);
+            return;
+
+        }
 
         let filas = "";
 
-        usuarios.forEach((usuario, indice) => {
+        usuarios.slice(0, 10).forEach((usuario, indice) => {
 
             const puesto = indice + 1;
 
+            const clase =
+                usuario.usuario == usuarioLogueado
+                    ? "usuario-actual"
+                    : "";
+
             filas += `
-                <tr>
+                <tr class="${clase}">
                     <td>${medallaSegunPuesto(puesto)}</td>
-                    <td>${usuario.nombre_completo ?? usuario.usuario}</td>
+                    <td>${usuario.nombre_completo}</td>
                     <td>${usuario.puntos}</td>
                 </tr>
             `;
@@ -53,6 +59,20 @@ async function mostrarRanking() {
         });
 
         cuerpo.innerHTML = filas;
+
+        // Buscar la posición del usuario logueado
+        const posicion = usuarios.findIndex(
+            u => u.usuario == usuarioLogueado
+        ) + 1;
+
+        if (posicion > 0) {
+            document.getElementById("miPosicion").innerHTML = `
+                <div class="dato">👤 <strong>${usuarios[posicion - 1].nombre_completo}</strong></div>
+                <div class="dato">🏆 Puesto <strong>#${posicion}</strong></div>
+                <div class="dato">⭐ <strong>${usuarios[posicion - 1].puntos}</strong> puntos</div>
+            `;
+
+        }
 
     } catch (error) {
 

@@ -86,6 +86,7 @@ app.post("/login", async (req, res) => {
     res.send({
 
         login: true,
+        id_usuario: usuario[0].id_usuario,
         admin: usuario[0].es_admin,
         usuario: usuario[0].usuario
 
@@ -94,7 +95,7 @@ app.post("/login", async (req, res) => {
 });
 
 //OBTENER CLUBES
-app.get("/clubes", async (req,res)=>{
+app.get("/clubes", async (req, res) => {
 
     const respuesta = await realizarQuery(`
         SELECT * FROM Clubes
@@ -106,7 +107,7 @@ app.get("/clubes", async (req,res)=>{
 });
 
 //OBTENER JUGADORES
-app.get("/jugadores", async (req,res)=>{
+app.get("/jugadores", async (req, res) => {
 
     const respuesta = await realizarQuery(`
         SELECT
@@ -272,7 +273,7 @@ app.delete("/usuarios/:id", async (req, res) => {
         WHERE id_usuario=${req.params.id}
     `);
 
-    if(existe.length==0){
+    if (existe.length == 0) {
         return res.send("El usuario no existe");
     }
 
@@ -287,18 +288,40 @@ app.delete("/usuarios/:id", async (req, res) => {
 
 app.post("/partida", async (req, res) => {
 
-    const jugadores = await realizarQuery(`
+    const usados = req.body.usados || [];
+
+    let consulta = `
         SELECT id_futbolista
         FROM Futbolistas
-    `);
+    `;
 
-    const aleatorio = jugadores[Math.floor(Math.random() * jugadores.length)];
+    if (usados.length > 0) {
+
+        consulta += `
+            WHERE id_futbolista NOT IN (${usados.join(",")})
+        `;
+
+    }
+
+    const jugadores = await realizarQuery(consulta);
+
+    if (jugadores.length == 0) {
+
+        return res.send({
+            terminado: true
+        });
+
+    }
+
+    const aleatorio =
+        jugadores[Math.floor(Math.random() * jugadores.length)];
 
     await realizarQuery(`
         INSERT INTO Partidas
-        (id_usuario, id_futbolista_objetivo)
+        (id_usuario,id_futbolista_objetivo)
+
         VALUES
-        (${req.body.id_usuario}, ${aleatorio.id_futbolista})
+        (${req.body.id_usuario},${aleatorio.id_futbolista})
     `);
 
     const partida = await realizarQuery(`
@@ -307,7 +330,9 @@ app.post("/partida", async (req, res) => {
     `);
 
     res.send({
+
         id_partida: partida[0].id_partida
+
     });
 
 });
@@ -366,13 +391,72 @@ app.post("/intento", async (req, res) => {
             ${id_futbolista}
         )
     `);
-
+    const numeroIntento = cantidad[0].cantidad + 1;
     const j = elegido[0];
     const o = objetivo[0];
+    const gano = j.id_futbolista == o.id_futbolista;
 
+    let puntos = 0;
+    if (gano) {
+
+        puntos = 10;
+
+        switch (numeroIntento) {
+
+            case 1:
+                puntos = 100;
+                break;
+
+            case 2:
+                puntos = 90;
+                break;
+
+            case 3:
+                puntos = 80;
+                break;
+
+            case 4:
+                puntos = 70;
+                break;
+
+            case 5:
+                puntos = 60;
+                break;
+
+            case 6:
+                puntos = 50;
+                break;
+
+            case 7:
+                puntos = 40;
+                break;
+
+            case 8:
+                puntos = 30;
+                break;
+
+            case 9:
+                puntos = 20;
+                break;
+
+        }
+
+        await realizarQuery(`
+
+        UPDATE Usuarios
+
+        SET puntos = puntos + ${puntos}
+
+        WHERE id_usuario = ${partida[0].id_usuario}
+
+    `);
+
+    }
     res.send({
 
-        ganado: j.id_futbolista == o.id_futbolista,
+        ganado: gano,
+        
+        puntos_obtenidos: puntos,
 
         nacionalidad: j.nacionalidad == o.nacionalidad,
 
@@ -381,6 +465,8 @@ app.post("/intento", async (req, res) => {
         liga: j.id_liga == o.id_liga,
 
         posicion: j.posicion == o.posicion,
+
+        id_objetivo: o.id_futbolista,
 
         dorsal: {
 
@@ -397,7 +483,7 @@ app.post("/intento", async (req, res) => {
             mayor: j.edad < o.edad
 
         }
-
+        
     });
 
 });
